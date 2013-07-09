@@ -1,14 +1,15 @@
 {
   "name": "promisesaplus",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Minimal Promises/A+ lib",
   "main": "promise.js",
   "scripts": {
     "test": "promises-aplus-tests test/adapter"
   },
-  "repository": "",
+  "repository": "https://github.com/potch/promise.js",
   "keywords": [
-    "promises"
+    "promises",
+    "promises-aplus"
   ],
   "author": "potch",
   "license": "BSD",

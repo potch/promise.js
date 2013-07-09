@@ -12,6 +12,6 @@ Promises/A+ spec here: http://promisesaplus.com/
 
 * `then(onFulfill, onReject)` - bind fulfillment/rejection handlers to the promise. Returns a promise object
 * `fulfill(value)` - fulfills the promise with the passed value.
-* 'reject(reason)' - rejects the promise with the passed reason.
+* `reject(reason)` - rejects the promise with the passed reason.
 
 For all behaviors, see the [spec](http://promisesaplus.com/ "Promises/A+ Specification").
