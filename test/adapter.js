@@ -1,4 +1,4 @@
-var promise = require('../index.js');
+var promise = require('../promise');
 
 console.log(promise);
 
