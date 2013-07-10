@@ -1,12 +1,12 @@
 # promise.js
 
+[<img align="right" alt="Promises/A+ 1.0 compliant" src="http://promisesaplus.com/assets/logo-small.png">](http://promisesaplus.com/)
+
 A Minimal, fully Promises/A+ compliant library.
 
 Promises/A+ spec here: http://promisesaplus.com/
 
 [![Build Status](https://travis-ci.org/potch/promise.js.png)](https://travis-ci.org/potch/promise.js)
-
-[![Promises/A+ 1.0 compliant](http://promisesaplus.com/assets/logo-small.png)](http://promisesaplus.com/)
 
 # Usage
 
