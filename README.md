@@ -4,6 +4,10 @@ A Minimal, fully Promises/A+ compliant library.
 
 Promises/A+ spec here: http://promisesaplus.com/
 
+[![Build Status](https://travis-ci.org/potch/promise.js.png)](https://travis-ci.org/potch/promise.js)
+
+[![Promises/A+ 1.0 compliant](http://promisesaplus.com/assets/logo-small.png)](http://promisesaplus.com/)
+
 # Usage
 
 * `promise()` - Created a promise. Can pass an optional `obj` argument. If passed, promise methods are attached to passed object.
