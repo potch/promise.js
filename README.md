@@ -12,11 +12,11 @@ Promises/A+ spec here: http://promisesaplus.com/
 
 * `promise()` - Creates a promise. Can pass an optional `obj` argument. If passed, promise methods are attached to passed object.
 * `promise.isPromise(obj)` - Uses duck-typing to check whether the given object is a 'promise' (does it have a `then` method?)
-* `promise.avow(fn)` - wrap a function in a promise. Usage:
+* `promise.avow(fn)` - wrap a function in a promise. Use like so:
 
 ```js
 var add = promise.avow(function (fulfill, reject, a, b) {
-  if (a <= 2 && b <=2) {
+  if (a <= 2 && b <= 2) {
     fulfill(a + b);
   } else {
     reject('Math is hard.');
