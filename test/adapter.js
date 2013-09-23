@@ -1,7 +1,5 @@
 var promise = require('../promise');
 
-console.log(promise);
-
 exports.fulfilled = function fulfilled(value) {
     var p = promise();
     p.fulfill(value);
