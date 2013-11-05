@@ -1,52 +1,90 @@
-var promise = (function() {
+var Promise = (function() {
 
-    // minipromise
-    // One can optionally bestow the promise capabilities to any existing object.
-    function promise(obj) {
-        if (typeof obj === 'undefined') {
-            obj = {};
+    function Promise(fn) {
+        if (typeof fn !== 'function') {
+            throw "Expected a function as first argument."
         }
 
         var pending = true;
-        var fulfilled = false;
-        var fulfillHandlers = [];
+        var resolved = false;
+        var resolveHandlers = [];
         var rejectHandlers = [];
         var result;
+        var self = this;
 
-        obj.then = function(onFulfilled, onRejected) {
-            var p = promise();
+        function then(onResolved, onRejected) {
+            var o = {};
+            o.promise = new Promise(function (resolve, reject){
+                o.resolve = resolve;
+                o.reject = reject;
 
-            fulfillHandlers.push([onFulfilled, p]);
-            rejectHandlers.push([onRejected, p]);
+                resolveHandlers.push([onResolved, o]);
+                rejectHandlers.push([onRejected, o]);
 
-            setTimeout(function() {
-                if (!pending) {
-                    if (fulfilled) {
-                        flushHandlers(fulfillHandlers);
-                    } else {
-                        flushHandlers(rejectHandlers);
+                setTimeout(function () {
+                    if (!pending) {
+                        if (resolved) {
+                            flushHandlers(resolveHandlers);
+                        } else {
+                            flushHandlers(rejectHandlers);
+                        }
                     }
-                }
-            }, 0);
-            return p;
+                }, 0);
+            });
+            return o.promise;
         };
 
-        obj.fulfill = function(value) {
+        function resolve(value) {
             if (pending) {
-                result = value;
-                pending = false;
-                fulfilled = true;
-
-                flushHandlers(fulfillHandlers);
+                if (value === self) {
+                    reject(new TypeError('a Promise can not be resolved with itself'));
+                }
+                if (isPromise(value)) {
+                    console.log('x was promise');
+                    value.then(resolve, reject);
+                } else {
+                    console.dir(value);
+                    if (typeof value === 'object' ||
+                        typeof value === 'function') {
+                        console.log('x is oof ' + typeof value);
+                        try {
+                            if ('then' in value && typeof value.then === 'function') {
+                                console.log('x is thenable');
+                                value.then(resolve, reject);
+                            } else {
+                                console.log('x is not thenable');
+                                _resolve(value);
+                            }
+                        } catch (e) {
+                            console.log('there was an error with x');
+                            reject(e);
+                        }
+                    } else {
+                        console.log('x is ' + typeof value);
+                        _resolve(value);
+                    }
+                }
             }
         };
 
-        obj.reject = function(reason) {
+        function _resolve(value) {
+            result = value;
+            pending = false;
+            resolved = true;
+
+            setTimeout(function () {
+                flushHandlers(resolveHandlers);
+            }, 0);
+        }
+
+        function reject(reason) {
             if (pending) {
                 result = reason;
                 pending = false;
 
-                flushHandlers(rejectHandlers);
+                setTimeout(function () {
+                    flushHandlers(rejectHandlers);
+                }, 0);
             }
         };
 
@@ -54,50 +92,48 @@ var promise = (function() {
             while (list.length) {
                 var tuple = list.shift();
                 var handler = tuple[0];
-                var p = tuple[1];
+                var o = tuple[1];
                 if (typeof handler === 'function') {
                     try {
                         var subResult = handler(result);
                     } catch (e) {
-                        p.reject(e);
+                        o.reject(e);
                     }
-                    if (promise.isPromise(subResult)) {
-                        subResult.then(p.fulfill, p.reject);
+                    if (subResult === o.promise) {
+                        o.reject(new TypeError());
+                    }
+                    if (isPromise(subResult)) {
+                        subResult.then(o.resolve, o.reject);
                     } else {
-                        p.fulfill(subResult);
+                        if (typeof subResult !== 'undefined') {
+                            o.resolve(subResult);
+                        }
                     }
                 } else {
-                    if (fulfilled) {
-                        p.fulfill(result);
+                    if (resolved) {
+                        o.resolve(result);
                     } else {
-                        p.reject(result);
+                        o.reject(result);
                     }
                 }
             }
         }
 
-        return obj;
+        this.then = then;
+
+        fn(resolve, reject);
     }
 
-    promise.isPromise = function(p) {
-        return p && ('then' in p && typeof p.then === 'function');
-    }
-
-    // wrap a function in a promise
-    promise.avow = function (fn) {
-      var p = promise();
-      return function() {
-        fn.apply(null, [p.fulfill, p.reject].concat(Array.prototype.slice.apply(arguments)));
-        return { then: p.then };
-      };
+    function isPromise(p) {
+        return p instanceof Promise;
     }
 
     if (this.define !== undefined && define.amd) {
-        define('promise', [], promise);
+        define('promise', [], Promise);
     } else if (typeof module !== 'undefined' && module.exports !== undefined) {
-        module.exports = promise;
+        module.exports = Promise;
     }
 
-    return promise;
+    return Promise;
 })();
 
