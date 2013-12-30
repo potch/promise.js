@@ -1,3 +1,7 @@
+# promise.js is no longer under active development!
+
+[jarchibald/ES6-Promises](https://github.com/jakearchibald/ES6-Promises) does everything this library was set out to do.
+
 # promise.js
 
 [<img align="right" alt="Promises/A+ 1.0 compliant" src="http://promisesaplus.com/assets/logo-small.png">](http://promisesaplus.com/)
